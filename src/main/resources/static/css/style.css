@@ -1,0 +1,220 @@
+/* --- NEW UI STYLES --- */
+
+/* New background for the body */
+.app-bg {
+    background-color: #f4f7f6; /* A very light, clean gray/green */
+    background-image: linear-gradient(180deg, #ffffff 0%, #f4f7f6 100vh);
+}
+
+/* --- NEW NAVBAR STYLES --- */
+.navbar-professional {
+    background: #004e92;  /* Fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #000428, #004e92);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #000428, #004e92); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+/* Brand/logo text */
+.navbar-professional .navbar-brand {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Toggler icon */
+.navbar-professional .navbar-toggler-icon {
+    /* This creates a white "hamburger" icon */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-professional .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Link text color */
+.navbar-professional .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* --- NEW LINK HIGHLIGHT STYLES --- */
+.nav-link-highlight {
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    padding: 8px 12px;
+    margin-left: 4px; /* Adds a little space between links */
+}
+
+/* This is the highlight effect on hover */
+.nav-link-highlight:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* Ensure logout button looks like a link */
+.navbar-professional .btn-link {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    padding-top: 8px; /* Align with other links */
+    padding-bottom: 8px;
+}
+.navbar-professional .btn-link:hover {
+    color: #ffffff;
+}
+/* --- END NEW NAVBAR STYLES --- */
+
+
+/* Sticky Footer Container */
+.footer-container {
+    background-color: #2c3e50;
+    padding: 2rem 0;
+}
+.footer-container .footer-heading {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+.footer-container p,
+.footer-container li {
+    color: #bdc3c7;
+}
+.footer-container .footer-link {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-container .footer-link:hover {
+    color: #ffffff;
+}
+.footer-container .footer-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    color: #bdc3c7;
+    transition: color 0.2s;
+}
+.footer-container .footer-icon:hover {
+    color: #ffffff;
+}
+.footer-bottom {
+    border-top: 1px solid #34495e;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    color: #95a5a6;
+}
+.heart-icon {
+    color: #e74c3c;
+}
+
+/* Attractive Account Card */
+.account-card-attractive {
+    border: none;
+    background: #004e92;
+    background: -webkit-linear-gradient(to right, #000428, #004e92);
+    background: linear-gradient(to right, #000428, #004e92);
+    color: #ffffff;
+}
+.account-card-attractive .btn-light {
+    font-weight: 600;
+    color: #004e92;
+}
+.account-card-attractive .btn-outline-light {
+    font-weight: 600;
+}
+
+
+/* --- NEW: Split Page Content for Login/Register --- */
+.split-page-container {
+    display: flex; /* Use flexbox for side-by-side */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-grow: 1; /* Make it take up available vertical space */
+    padding: 20px 0; /* Some padding top/bottom */
+}
+
+.split-page-left {
+    flex: 1; /* Take up remaining space */
+    background: url('../images/bank_banner.jpg') no-repeat center center; /* Your banner image */
+    background-size: cover; /* Cover the entire area */
+    min-height: 500px; /* Minimum height for the banner */
+    border-radius: 0.5rem 0 0 0.5rem; /* Rounded corners on left side */
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); /* Subtle shadow */
+    display: flex; /* To center the image within */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    opacity: 0.95; /* Slightly fade the image */
+}
+
+.split-page-right {
+    flex-basis: 450px; /* Fixed width for the form side */
+    max-width: 450px; /* Max width for consistency */
+    background-color: #ffffff;
+    border-radius: 0 0.5rem 0.5rem 0; /* Rounded corners on right side */
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); /* Subtle shadow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) { /* On medium devices and smaller */
+    .split-page-left {
+        display: none; /* Hide the image banner */
+    }
+    .split-page-right {
+        flex-basis: 100%; /* Form takes full width */
+        max-width: 500px; /* Limit form width */
+        margin: auto; /* Center the form */
+        border-radius: 0.5rem; /* Full rounded corners */
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    }
+}
+@media (max-width: 768px) {
+    .split-page-right {
+        max-width: 90%;
+    }
+}
+
+
+/*Banner style*/
+/* Banner container */
+.banner-section {
+    /*background: linear-gradient(135deg, #002b6f, #003d99);*/
+    /*color: white;*/
+    text-align: center;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
+    padding: 40px;
+}
+
+/* Java icon or logo image */
+.banner-section img {
+    width: 70% ;
+    margin-bottom: 20px;
+    transition: transform 0.4s ease;
+}
+
+/* Text styling */
+.banner-section h2 {
+    font-weight: 700;
+    background-color: beige;
+    font-size: 2.2rem;
+}
+
+.banner-section p {
+    font-style: italic;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Hover effect */
+.banner-section:hover {
+    //background: linear-gradient(135deg, #003d99, #004fb8);
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+.banner-section:hover img {
+    transform: rotate(-2deg) scale(1.1);
+}

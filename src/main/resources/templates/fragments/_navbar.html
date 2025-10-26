@@ -1,0 +1,103 @@
+<!--&lt;!&ndash;-->
+<!--  THE FIX IS HERE: I've added the 'xmlns:sec' attribute.-->
+<!--  This "imports" the Spring Security tags so Thymeleaf can understand them.-->
+<!--&ndash;&gt;-->
+<!--<div th:fragment="navbar" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">-->
+<!--    <div class="container">-->
+<!--      <a class="navbar-brand" th:href="@{/}">-->
+<!--        <i class="bi bi-bank"></i>-->
+<!--        Java Dev Bank-->
+<!--      </a>-->
+<!--      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"-->
+<!--              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--        <span class="navbar-toggler-icon"></span>-->
+<!--      </button>-->
+<!--      <div class="collapse navbar-collapse" id="navbarNav">-->
+
+<!--        &lt;!&ndash; This is the section for LOGGED IN users &ndash;&gt;-->
+<!--        <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/dashboard}">-->
+<!--              <i class="bi bi-speedometer2"></i> Dashboard-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/transfer}">-->
+<!--              <i class="bi bi-arrow-left-right"></i> Transfer-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <form th:action="@{/logout}" method="post" class="d-inline">-->
+<!--              <button type="submit" class="nav-link btn btn-link" style="color: rgba(255,255,255,.55);">-->
+<!--                <i class="bi bi-box-arrow-right"></i> Logout-->
+<!--              </button>-->
+<!--            </form>-->
+<!--          </li>-->
+<!--        </ul>-->
+
+<!--        &lt;!&ndash; This section is for users WHO ARE NOT logged in &ndash;&gt;-->
+<!--        <ul class="navbar-nav ms-auto" sec:authorize="!isAuthenticated()">-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/login}">Login</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/register}">Register</a>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </nav>-->
+<!--</div>-->
+
+<!--
+  MODIFICATIONS:
+  - Replaced 'navbar-dark bg-dark' with 'navbar-professional' for new styling.
+  - Added 'nav-link-highlight' to the links for hover effects.
+-->
+<div th:fragment="navbar" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <nav class="navbar navbar-expand-lg navbar-professional shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/dashboard}">
+        <i class="bi bi-bank2"></i>
+        Java Dev Bank
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Links for Authenticated Users -->
+        <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link nav-link-highlight" th:href="@{/dashboard}">
+              <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-highlight" th:href="@{/transfer}">
+              <i class="bi bi-arrow-left-right"></i> Transfer
+            </a>
+          </li>
+          <li class="nav-item">
+            <form th:action="@{/logout}" method="post" class="d-inline">
+              <button type="submit" class="nav-link nav-link-highlight btn btn-link">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+
+        <!-- Links for Anonymous Users -->
+        <ul class="navbar-nav ms-auto" sec:authorize="!isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link nav-link-highlight" th:href="@{/login}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-highlight" th:href="@{/register}">Register</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

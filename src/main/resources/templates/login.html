@@ -1,0 +1,121 @@
+
+<!--<!doctype html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{fragments/_layout}">-->
+<!--<head>-->
+<!--    <title>Login</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div layout:fragment="content">-->
+<!--    <div class="row justify-content-center">-->
+<!--        <div class="col-md-6 col-lg-5 col-xl-4">-->
+<!--            <div class="card shadow-lg border-0 rounded-lg mt-5">-->
+<!--                <div class="card-body p-4 p-md-5">-->
+
+<!--                    <h2 class="text-center fw-bold text-dark mb-4">Login to Your Account</h2>-->
+
+<!--                    &lt;!&ndash; Success Message (from registration) &ndash;&gt;-->
+<!--                    <div th:if="${success}" class="alert alert-success" role="alert"-->
+<!--                         th:text="${success}">-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Error Message (from failed login) &ndash;&gt;-->
+<!--                    <div th:if="${error}" class="alert alert-danger" role="alert"-->
+<!--                         th:text="${error}">-->
+<!--                    </div>-->
+
+<!--                    <form th:action="@{/login}" method="post">-->
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="email" class="form-control" id="email" name="email"-->
+<!--                                   placeholder="name@example.com" required>-->
+<!--                            <label for="email">Email address</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="password" class="form-control" id="password" name="password"-->
+<!--                                   placeholder="Password" required>-->
+<!--                            <label for="password">Password</label>-->
+<!--                        </div>-->
+<!--                        <div class="d-grid mt-4">-->
+<!--                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">-->
+<!--                                <i class="bi bi-box-arrow-in-right"></i> Login-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--                <div class="card-footer text-center py-3 bg-light">-->
+<!--                    <div class="small"><a th:href="@{/register}">Need an account? Sign up!</a></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/_layout}"
+      th:with="page='login'">
+<head>
+    <title>Login</title>
+    <marquee th:background="yellow">
+        This Site is Still Under development , still You can create account and transfer amount. We are comming with few updates soon !!
+    </marquee>
+</head>
+<body>
+
+<!--
+  This content is injected into the "split-page-right" div in _layout.html.
+  All positioning classes (like 'row' and 'col-*') have been removed
+  because the layout file now handles them.
+-->
+
+
+
+
+<div layout:fragment="content">
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center fw-bold text-dark mb-4">Login to Your Account</h2>
+
+            <!-- Success Message (from registration) -->
+            <div th:if="${success}" class="alert alert-success" role="alert"
+                 th:text="${success}">
+            </div>
+
+            <!-- Error Message (from failed login) -->
+            <div th:if="${error}" class="alert alert-danger" role="alert"
+                 th:text="${error}">
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="email" name="email"
+                           placeholder="name@example.com" required>
+                    <label for="email">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center py-3 bg-light">
+            <div class="small"><a th:href="@{/register}">Need an account? Sign up!</a></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

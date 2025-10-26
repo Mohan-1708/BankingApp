@@ -1,0 +1,140 @@
+<!--<!doctype html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{fragments/_layout}">-->
+<!--<head>-->
+<!--    <title>Fund Transfer</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div layout:fragment="content">-->
+<!--    <div class="row justify-content-center">-->
+<!--        <div class="col-md-8 col-lg-7">-->
+<!--            <div class="card shadow-lg border-0 rounded-lg">-->
+<!--                <div class="card-header bg-primary text-white text-center">-->
+<!--                    <h3 class="fw-light my-4">Make a Fund Transfer</h3>-->
+<!--                </div>-->
+<!--                <div class="card-body p-4">-->
+
+<!--                    <div th:if="${error}" class="alert alert-danger" role="alert"-->
+<!--                         th:text="${error}">-->
+<!--                    </div>-->
+
+<!--                    <form th:action="@{/transfer}" th:object="${transferRequest}" method="post">-->
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <select class="form-select" id="fromAccountNumber" th:field="*{fromAccountNumber}" required>-->
+<!--                                <option value="" disabled selected>Select your account</option>-->
+<!--                                <option th:each="account : ${userAccounts}"-->
+<!--                                        th:value="${account.accountNumber}"-->
+<!--                                        th:text="${account.accountType + ' - ' + account.accountNumber + ' (₹' + #numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT') + ')'}">-->
+<!--                                    Savings - 12345 ($1,000.00)-->
+<!--                                </option>-->
+<!--                            </select>-->
+<!--                            <label for="fromAccountNumber">From Account</label>-->
+<!--                        </div>-->
+
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="text" class="form-control" id="toAccountNumber"-->
+<!--                                   th:field="*{toAccountNumber}" placeholder="Recipient's Account Number" required>-->
+<!--                            <label for="toAccountNumber">To Account Number</label>-->
+<!--                        </div>-->
+
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="number" class="form-control" id="amount" th:field="*{amount}"-->
+<!--                                   placeholder="0.00" min="0.01" step="0.01" required>-->
+<!--                            <label for="amount">Amount (₹)</label>-->
+<!--                        </div>-->
+
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="text" class="form-control" id="description"-->
+<!--                                   th:field="*{description}" placeholder="e.g., Rent, Dinner, etc.">-->
+<!--                            <label for="description">Description (Optional)</label>-->
+<!--                        </div>-->
+
+<!--                        <div class="d-grid">-->
+<!--                            <button type="submit" class="btn btn-primary btn-lg">-->
+<!--                                <i class="bi bi-send-fill"></i> Submit Transfer-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/_layout}">
+<head>
+    <title>Fund Transfer</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7 col-xl-6">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-body p-4 p-md-5">
+
+                    <h2 class="text-center fw-bold text-dark mb-4">Make a Fund Transfer</h2>
+
+                    <!-- Error Message -->
+                    <div th:if="${error}" class="alert alert-danger" role="alert"
+                         th:text="${error}">
+                    </div>
+
+                    <form th:action="@{/transfer}" th:object="${transferRequest}" method="post">
+                        <!-- From Account -->
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="fromAccountNumber" th:field="*{fromAccountNumber}" required>
+                                <option value="" disabled selected>Select your account</option>
+                                <option th:each="account : ${userAccounts}"
+                                        th:value="${account.accountNumber}"
+                                        th:text="${account.accountType + ' - ' + account.accountNumber + ' (₹' + #numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT') + ')'}">
+                                    Savings - 12345 (₹1,000.00)
+                                </option>
+                            </select>
+                            <label for="fromAccountNumber">From Account</label>
+                        </div>
+
+                        <!-- To Account -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="toAccountNumber"
+                                   th:field="*{toAccountNumber}" placeholder="Recipient's Account Number" required>
+                            <label for="toAccountNumber">To Account Number</L>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                   placeholder="0.00" min="0.01" step="0.01" required>
+                            <label for="amount">Amount (₹)</label>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="description"
+                                   th:field="*{description}" placeholder="e.g., Rent, Dinner, etc.">
+                            <label for="description">Description (Optional)</label>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                                <i class="bi bi-send-fill"></i> Submit Transfer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

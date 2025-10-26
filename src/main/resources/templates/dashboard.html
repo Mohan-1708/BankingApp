@@ -1,0 +1,149 @@
+<!--<!doctype html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{fragments/_layout}">-->
+<!--<head>-->
+<!--    <title>Dashboard</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div layout:fragment="content">-->
+
+<!--    &lt;!&ndash; Welcome Header &ndash;&gt;-->
+<!--    <h1 class="display-5 mb-4 text-dark">-->
+<!--        Welcome back, <span th:text="${user.name}" class="fw-bold text-dark">User</span>!-->
+<!--    </h1>-->
+
+<!--    &lt;!&ndash; Alert for successful transfer &ndash;&gt;-->
+<!--    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--        <i class="bi bi-check-circle-fill"></i>-->
+<!--        <strong th:text="${success}"></strong>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Alert for access error &ndash;&gt;-->
+<!--    <div th:if="${param.error == 'access_denied'}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--        <i class="bi bi-exclamation-triangle-fill"></i>-->
+<!--        <strong>Access Denied:</strong> You do not have permission to view that account's history.-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Accounts Overview &ndash;&gt;-->
+<!--    <h2 class="h4 mt-5 mb-3 text-dark">Your Accounts</h2>-->
+<!--    <div class="row">-->
+<!--        &lt;!&ndash;-->
+<!--            *** THIS IS THE NEW SECTION ***-->
+<!--            - It uses 'account-card-attractive' from your style.css-->
+<!--            - It uses 'text-white'-->
+<!--            - It has 'btn-light'-->
+<!--        &ndash;&gt;-->
+<!--        <div class="col-md-6 col-lg-5 mb-4" th:each="account : ${accounts}">-->
+<!--            <div class="card h-100 shadow-lg account-card-attractive text-white">-->
+<!--                <div class="card-body d-flex flex-column p-4">-->
+<!--                    <h5 class="card-title fw-bold" th:text="${account.accountType}">SAVINGS</h5>-->
+<!--                    <p class="card-text text-white-50 mb-2" th:text="${account.accountNumber}">1234567890</p>-->
+<!--                    <h2 class="card-text display-4 fw-bold mb-auto">-->
+<!--                        ₹<span th:text="${#numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT')}">5,000.00</span>-->
+<!--                    </h2>-->
+<!--                    <div class="mt-4">-->
+<!--                        <a th:href="@{/transfer}" class="btn btn-light">-->
+<!--                            <i class="bi bi-arrow-left-right"></i> Make Transfer-->
+<!--                        </a>-->
+<!--                        <a th:href="@{/history(accountId=${account.id})}" class="btn btn-outline-light ms-2">-->
+<!--                            <i class="bi bi-clock-history"></i> View History-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; No Accounts Card &ndash;&gt;-->
+<!--        <div class="col-md-6" th:if="${accounts.isEmpty()}">-->
+<!--            <div class="card h-100 shadow-sm">-->
+<!--                <div class="card-body text-center">-->
+<!--                    <h5 class="card-title">No Accounts Found</h5>-->
+<!--                    <p class="card-text">You do not have any bank accounts set up yet.</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/_layout}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <!-- Welcome Header -->
+    <h1 class="display-5 mb-4 text-dark">
+        Welcome back, <span th:text="${user.name}" class="fw-bold text-dark">User</span>!
+    </h1>
+
+    <!-- Alert for successful transfer -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i>
+        <strong th:text="${success}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Alert for access error -->
+    <div th:if="${param.error == 'access_denied'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Access Denied:</strong> You do not have permission to view that account's history.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Accounts Overview -->
+    <h2 class="h4 mt-5 mb-3 text-dark">Your Accounts</h2>
+    <div class="row">
+        <!--
+            *** MODIFIED THIS SECTION ***
+        -->
+        <div class="col-md-6 col-lg-5 mb-4" th:each="account : ${accounts}">
+            <div class="card h-100 shadow-lg account-card-attractive text-white">
+                <div class="card-body d-flex flex-column p-4">
+                    <h5 class="card-title fw-bold" th:text="${account.accountType}">SAVINGS</h5>
+                    <!--
+                        *** THIS IS THE CHANGED LINE ***
+                    -->
+                    <p class="card-text text-white-50 mb-2" th:text="'Your Account number : ' + ${account.accountNumber}">Your Account number : 1234567890</p>
+                    <h2 class="card-text display-4 fw-bold mb-auto">
+                        ₹<span th:text="${#numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT')}">5,000.00</span>
+                    </h2>
+                    <div class="mt-4">
+                        <a th:href="@{/transfer}" class="btn btn-light">
+                            <i class="bi bi-arrow-left-right"></i> Make Transfer
+                        </a>
+                        <a th:href="@{/history(accountId=${account.id})}" class="btn btn-outline-light ms-2">
+                            <i class="bi bi-clock-history"></i> View History
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Accounts Card -->
+        <div class="col-md-6" th:if="${accounts.isEmpty()}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">No Accounts Found</h5>
+                    <p class="card-text">You do not have any bank accounts set up yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
