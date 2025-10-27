@@ -1,0 +1,23 @@
+version: "1.0"
+services:
+  banking-app:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - mybank
+  mybank:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    env_file:
+      - .env
