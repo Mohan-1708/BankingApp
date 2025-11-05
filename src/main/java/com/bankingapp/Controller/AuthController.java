@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority; // <-- IMPORT THIS
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -22,13 +23,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
-
+    // ... (fields are unchanged) ...
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    // --- Login Handlers ---
-
+    // ... (login/register GET methods are unchanged) ...
     @GetMapping("/login")
     public String showLoginForm() {
         return "login"; // Returns login.html
@@ -56,12 +56,25 @@ public class AuthController {
             jwtCookie.setHttpOnly(true);
             jwtCookie.setSecure(false); // Set to true in production (HTTPS)
             jwtCookie.setPath("/");
-            // Set cookie expiry (e.g., 10 min, same as JWT)
-            jwtCookie.setMaxAge(60*10);
+            // Set cookie expiry to 10 minutes (10 * 60 seconds)
+            jwtCookie.setMaxAge(10 * 60);
             response.addCookie(jwtCookie);
 
-            // 5. Redirect to the dashboard
-            return "redirect:/dashboard";
+            // 5. --- NEW: DYNAMIC REDIRECT ---
+            // Check the user's authority (role) and redirect
+            String redirectUrl = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .map(authority -> {
+                        if (authority.equals("ROLE_ADMIN")) {
+                            return "redirect:/admin/dashboard";
+                        } else {
+                            return "redirect:/dashboard";
+                        }
+                    })
+                    .orElse("redirect:/login?error"); // Fallback
+
+            return redirectUrl;
 
         } catch (Exception e) {
             // 6. Handle bad credentials
@@ -70,13 +83,12 @@ public class AuthController {
         }
     }
 
-    // --- Registration Handlers ---
-
     @GetMapping("/register")
     public String showRegistrationForm() {
         return "register"; // Returns register.html
     }
 
+    // ... (register POST method is unchanged) ...
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserRegistrationDto registrationDto,
                                RedirectAttributes redirectAttributes) {

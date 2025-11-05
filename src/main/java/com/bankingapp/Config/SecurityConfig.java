@@ -3,7 +3,7 @@ package com.bankingapp.Config;
 import com.bankingapp.Service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest; // <-- IMPORT THIS
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,12 +35,18 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // --- THIS IS THE FIX ---
                         // 1. Permit all static resources (CSS, JS, images, etc.)
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // 2. Permit our public pages
                         .requestMatchers("/login", "/register").permitAll()
-                        // 3. All other requests must be authenticated
+
+                        // --- NEW: ROLE-BASED RULES ---
+                        // 3. Admin-only pages
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // 4. User-only pages
+                        .requestMatchers("/dashboard", "/transfer", "/history").hasRole("USER")
+
+                        // 5. All other requests must be authenticated
                         .anyRequest().authenticated()
                 )
                 // Configure session management to be STATELESS (we use JWTs, not sessions)
@@ -69,7 +75,6 @@ public class SecurityConfig {
                             cookie.setPath("/");
                             cookie.setHttpOnly(true);
                             cookie.setMaxAge(0); // Expire the cookie
-                            response.addCookie(cookie);
                             // Redirect to login page
                             response.sendRedirect("/login?logout");
                         })
@@ -85,7 +90,6 @@ public class SecurityConfig {
         // Tell the provider where to get user details
         authProvider.setUserDetailsService(userDetailsService);
         // Tell the provider what password encoder to use
-        // --- FIX: Use the injected field 'passwordEncoder', not the method 'passwordEncoder()' ---
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
@@ -96,4 +100,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-

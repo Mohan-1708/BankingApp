@@ -66,4 +66,20 @@ public interface AccountService {
      * @throws RuntimeException if the account is not found.
      */
     Account getAccountByAccountNumber(String accountNumber);
+
+
+
+    // ... (other methods)
+
+    /**
+     * Admin: Deposits a specified amount into an account.
+     */
+    void depositToAccount(String toAccountNumber, BigDecimal amount, String description);
+
+    /**
+     * Admin: Searches for accounts by account number or user email.
+     */
+    List<Account> searchAccounts(String query);
+
+
 }

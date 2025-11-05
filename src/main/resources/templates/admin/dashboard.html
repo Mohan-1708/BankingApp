@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/_layout}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <h1 class="display-5 mb-4 text-dark">Admin Dashboard</h1>
+
+    <!-- Alerts for success/error messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i>
+        <strong th:text="${success}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong th:text="${error}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${info}" class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong th:text="${info}"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="row">
+        <!-- Column 1: Search -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center fw-bold text-dark mb-4">Search Accounts</h2>
+                    <form th:action="@{/admin/search}" method="GET">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="query" name="query"
+                                   placeholder="Account Number or Email" required>
+                            <label for="query">Account Number or Email</label>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2: Deposit -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-lg border-0 rounded-lg h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center fw-bold text-dark mb-4">Make a Deposit</h2>
+                    <form th:action="@{/admin/deposit}" th:object="${depositDto}" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="toAccountNumber"
+                                   th:field="*{toAccountNumber}" placeholder="Recipient's Account Number" required>
+                            <label for="toAccountNumber">To Account Number</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                   placeholder="0.00" min="0.01" step="0.01" required>
+                            <label for="amount">Amount (₹)</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="description"
+                                   th:field="*{description}" placeholder="e.g., Bonus, Correction">
+                            <label for="description">Description (Optional)</label>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
+                                <i class="bi bi-cash-stack"></i> Submit Deposit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Section -->
+    <div th:if="${accounts != null and not accounts.isEmpty()}" class="mt-4">
+        <h2 class="text-dark">Search Results</h2>
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col">Owner Name</th>
+                            <th scope="col">Owner Email</th>
+                            <th scope="col">Account Number</th>
+                            <th scope="col">Account Type</th>
+                            <th scope="col" classs="text-end">Balance (₹)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="account : ${accounts}">
+                            <td th:text="${account.user.name}">John Doe</td>
+                            <td th:text="${account.user.email}">john@example.com</td>
+                            <td th:text="${account.accountNumber}">1234567890</td>
+                            <td th:text="${account.accountType}">SAVINGS</td>
+                            <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT')}">5,000.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

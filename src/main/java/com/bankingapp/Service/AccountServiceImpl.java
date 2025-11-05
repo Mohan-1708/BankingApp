@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -118,5 +119,54 @@ public class AccountServiceImpl implements AccountService {
         long number = (long) (Math.random() * 9_000_000_000L) + 1_000_000_000L;
         return String.valueOf(number);
     }
+
+
+
+
+    @Override
+    @Transactional
+    public void depositToAccount(String toAccountNumber, BigDecimal amount, String description) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Deposit amount must be positive.");
+        }
+
+        Account account = getAccountByAccountNumber(toAccountNumber);
+
+        // 1. Add balance
+        account.setBalance(account.getBalance().add(amount));
+
+        // 2. Create transaction
+        Transaction creditTx = Transaction.builder()
+                .amount(amount)
+                .transactionType(TransactionType.CREDIT)
+                .description("Admin Deposit: " + description)
+                .account(account)
+                .build();
+
+        // 3. Save changes
+        transactionRepository.save(creditTx);
+        accountRepository.save(account);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Account> searchAccounts(String query) {
+        if (query == null || query.isBlank()) {
+            return new ArrayList<>();
+        }
+
+        // Try searching by account number first
+        Optional<Account> accountByNum = accountRepository.findByAccountNumber(query);
+        if (accountByNum.isPresent()) {
+            return List.of(accountByNum.get());
+        }
+
+        // If not found, try searching by user email
+        // We need a new method in AccountRepository for this
+        return accountRepository.findByUserEmail(query);
+    }
+
+
+
 }
 
