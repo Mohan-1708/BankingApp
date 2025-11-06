@@ -121,35 +121,42 @@
 /* --- NEW: Split Page Content for Login/Register --- */
 .split-page-container {
     display: flex; /* Use flexbox for side-by-side */
-    justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
+    justify-content: center;
     flex-grow: 1; /* Make it take up available vertical space */
-    padding: 20px 0; /* Some padding top/bottom */
+    padding: 2rem 0;
 }
 
 .split-page-left {
-    flex: 1; /* Take up remaining space */
-    background: url('../images/bank_banner.jpg') no-repeat center center; /* Your banner image */
-    background-size: cover; /* Cover the entire area */
-    min-height: 500px; /* Minimum height for the banner */
-    border-radius: 0.5rem 0 0 0.5rem; /* Rounded corners on left side */
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); /* Subtle shadow */
-    display: flex; /* To center the image within */
-    align-items: center; /* Vertically center content */
-    justify-content: center; /* Horizontally center content */
-    opacity: 0.95; /* Slightly fade the image */
-}
+    flex-basis: 50%; /* Take up 50% of the width */
+    align-self: stretch; /* Make it fill the full height of the container */
 
-.split-page-right {
-    flex-basis: 450px; /* Fixed width for the form side */
-    max-width: 450px; /* Max width for consistency */
-    background-color: #ffffff;
-    border-radius: 0 0.5rem 0.5rem 0; /* Rounded corners on right side */
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); /* Subtle shadow */
+    /* *** THIS IS THE FIX ***
+      Changed path to 'bank_banner.png'
+    */
+    background: url('../images/bank_banner.png') no-repeat center center;
+    background-size: cover; /* Cover the entire area */
+
+    border-radius: 0.5rem 0 0 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+
+    /* These styles add the text OVER the background image */
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow to text to make it readable */
+}
+
+.split-page-right {
+    flex-basis: 50%; /* Take up 50% of the width */
+    max-width: 550px; /* Max width for the form card */
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Responsive adjustments */
@@ -161,60 +168,6 @@
         flex-basis: 100%; /* Form takes full width */
         max-width: 500px; /* Limit form width */
         margin: auto; /* Center the form */
-        border-radius: 0.5rem; /* Full rounded corners */
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        padding: 1rem;
     }
-}
-@media (max-width: 768px) {
-    .split-page-right {
-        max-width: 90%;
-    }
-}
-
-
-/*Banner style*/
-/* Banner container */
-.banner-section {
-    /*background: linear-gradient(135deg, #002b6f, #003d99);*/
-    /*color: white;*/
-    text-align: center;
-    height: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease-in-out;
-    padding: 40px;
-}
-
-/* Java icon or logo image */
-.banner-section img {
-    width: 70% ;
-    margin-bottom: 20px;
-    transition: transform 0.4s ease;
-}
-
-/* Text styling */
-.banner-section h2 {
-    font-weight: 700;
-    background-color: beige;
-    font-size: 2.2rem;
-}
-
-.banner-section p {
-    font-style: italic;
-    font-size: 1.2rem;
-    margin-top: 10px;
-}
-
-/* Hover effect */
-.banner-section:hover {
-    //background: linear-gradient(135deg, #003d99, #004fb8);
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-}
-
-.banner-section:hover img {
-    transform: rotate(-2deg) scale(1.1);
 }

@@ -28,5 +28,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return true if an email exists, false otherwise.
      */
     Boolean existsByEmail(String email);
+    long countByRoles(String role);
 }
 

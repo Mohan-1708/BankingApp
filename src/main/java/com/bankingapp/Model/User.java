@@ -1,7 +1,5 @@
 package com.bankingapp.Model;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,9 +44,12 @@ public class User implements UserDetails {
     private Set<Account> accounts = new HashSet<>();
 
     // --- UserDetails Methods ---
+    // This is the method that Spring Security needs to check roles.
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // This splits the "roles" string (e.g., "ROLE_ADMIN")
+        // into a collection that Spring Security understands.
         return Arrays.stream(this.roles.split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
