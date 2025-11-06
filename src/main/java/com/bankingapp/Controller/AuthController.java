@@ -3,7 +3,6 @@ package com.bankingapp.Controller;
 import com.bankingapp.Config.JwtUtil;
 import com.bankingapp.Dto.LoginRequestDto;
 import com.bankingapp.Dto.UserRegistrationDto;
-import com.bankingapp.Service.AccountService;
 import com.bankingapp.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority; // <-- IMPORT THIS
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -23,72 +22,106 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
-    // ... (fields are unchanged) ...
+
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    // ... (login/register GET methods are unchanged) ...
+    // --- USER LOGIN ---
     @GetMapping("/login")
     public String showLoginForm() {
-        return "login"; // Returns login.html
+        return "login"; // Renders templates/login.html
     }
 
     @PostMapping("/login")
     public String loginUser(@ModelAttribute LoginRequestDto loginRequest,
                             HttpServletResponse response,
                             RedirectAttributes redirectAttributes) {
+
+        Authentication authentication;
         try {
-            // 1. Authenticate the user
-            Authentication authentication = authenticationManager.authenticate(
+            // 1. Try to authenticate
+            authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
-
-            // 2. Set authentication in SecurityContext
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 3. Generate JWT
-            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            final String jwt = jwtUtil.generateToken(userDetails);
-
-            // 4. Create and set the HttpOnly cookie
-            Cookie jwtCookie = new Cookie("jwt-token", jwt);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(false); // Set to true in production (HTTPS)
-            jwtCookie.setPath("/");
-            // Set cookie expiry to 10 minutes (10 * 60 seconds)
-            jwtCookie.setMaxAge(10 * 60);
-            response.addCookie(jwtCookie);
-
-            // 5. --- NEW: DYNAMIC REDIRECT ---
-            // Check the user's authority (role) and redirect
-            String redirectUrl = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .findFirst()
-                    .map(authority -> {
-                        if (authority.equals("ROLE_ADMIN")) {
-                            return "redirect:/admin/dashboard";
-                        } else {
-                            return "redirect:/dashboard";
-                        }
-                    })
-                    .orElse("redirect:/login?error"); // Fallback
-
-            return redirectUrl;
-
         } catch (Exception e) {
-            // 6. Handle bad credentials
+            // 2. If auth fails, redirect back with an error
             redirectAttributes.addFlashAttribute("error", "Invalid username or password");
             return "redirect:/login";
         }
+
+        // 3. Set authentication in Spring Security's context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 4. ROLE CHECK: Only allow ROLE_USER to log in here
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst().orElse(null);
+
+        if (!"ROLE_USER".equals(role)) {
+            redirectAttributes.addFlashAttribute("error", "Access denied. This login is for customers only.");
+            return "redirect:/login";
+        }
+
+        // 5. Generate JWT, set cookie, and redirect to user dashboard
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        final String jwt = jwtUtil.generateToken(userDetails);
+        response.addCookie(createJwtCookie(jwt));
+
+        return "redirect:/dashboard";
     }
 
+    // --- ADMIN LOGIN ---
+    @GetMapping("/admin")
+    public String showAdminLoginForm() {
+        return "admin/login"; // Renders templates/admin/login.html
+    }
+
+    @PostMapping("/admin")
+    public String loginAdmin(@ModelAttribute LoginRequestDto loginRequest,
+                             HttpServletResponse response,
+                             RedirectAttributes redirectAttributes) {
+
+        Authentication authentication;
+        try {
+            // 1. Try to authenticate
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+        } catch (Exception e) {
+            // 2. If auth fails, redirect back with an error
+            redirectAttributes.addFlashAttribute("error", "Invalid admin username or password");
+            return "redirect:/admin";
+        }
+
+        // 3. Set authentication in Spring Security's context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 4. ROLE CHECK: Only allow ROLE_ADMIN to log in here
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst().orElse(null);
+
+        if (!"ROLE_ADMIN".equals(role)) {
+            redirectAttributes.addFlashAttribute("error", "Access denied. You do not have admin privileges.");
+            return "redirect:/admin";
+        }
+
+        // 5. Generate JWT, set cookie, and redirect to admin dashboard
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        final String jwt = jwtUtil.generateToken(userDetails);
+        response.addCookie(createJwtCookie(jwt));
+
+        return "redirect:/admin/dashboard";
+    }
+
+
+    // --- REGISTRATION ---
     @GetMapping("/register")
     public String showRegistrationForm() {
-        return "register"; // Returns register.html
+        return "register"; // Renders templates/register.html
     }
 
-    // ... (register POST method is unchanged) ...
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserRegistrationDto registrationDto,
                                RedirectAttributes redirectAttributes) {
@@ -104,5 +137,15 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    // --- HELPER METHOD to create the cookie ---
+    private Cookie createJwtCookie(String jwt) {
+        Cookie jwtCookie = new Cookie("jwt-token", jwt);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(false); // Set to true in production (HTTPS)
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(10 * 60); // 10 minutes
+        return jwtCookie;
     }
 }

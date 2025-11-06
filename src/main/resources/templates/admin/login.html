@@ -1,31 +1,24 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/_layout_split}"> <!-- <-- Uses the SPLIT layout -->
+      layout:decorate="~{fragments/_layout_split}"> <!-- <-- This is correct -->
 <head>
-    <title>Register</title>
+    <title>Admin Login</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="card shadow-lg border-0 rounded-lg">
         <div class="card-body p-4 p-md-5">
-            <h2 class="text-center fw-bold text-dark mb-4">Create an Account</h2>
-
-            <!-- Error Message -->
+            <h2 class="text-center fw-bold text-dark mb-4">Admin Portal Login</h2>
             <div th:if="${error}" class="alert alert-danger" role="alert"
                  th:text="${error}">
             </div>
 
-            <form th:action="@{/register}" method="post">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="name" name="name"
-                           placeholder="Your Name" required>
-                    <label for="name">Full Name</label>
-                </div>
+            <form th:action="@{/admin}" method="post">
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="email" name="email"
-                           placeholder="name@example.com" required>
-                    <label for="email">Email address</label>
+                           placeholder="admin@bank.com" required>
+                    <label for="email">Admin Email</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control" id="password" name="password"
@@ -34,13 +27,14 @@
                 </div>
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                        <i class="bi bi-person-plus-fill"></i> Register
+                        <i class="bi bi-box-arrow-in-right"></i> Login
                     </button>
                 </div>
             </form>
         </div>
         <div class="card-footer text-center py-3 bg-light">
-            <div class="small"><a th:href="@{/login}">Have an account? Go to login</a></div>
+            <!-- *** TINY TYPO FIX HERE (classs="small" to class="small") *** -->
+            <div class="small"><a th:href="@{/login}">User Login</a></div>
         </div>
     </div>
 </div>

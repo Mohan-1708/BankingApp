@@ -35,47 +35,35 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Permit all static resources (CSS, JS, images, etc.)
+                        // 1. Permit all static resources
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        // 2. Permit our public pages
-                        .requestMatchers("/login", "/register").permitAll()
 
-                        // --- NEW: ROLE-BASED RULES ---
-                        // 3. Admin-only pages
+                        // 2. Permit our public pages (ADDED /admin)
+                        .requestMatchers("/login", "/register", "/admin").permitAll()
+
+                        // 3. Admin-only pages (all pages *under* /admin/)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         // 4. User-only pages
                         .requestMatchers("/dashboard", "/transfer", "/history").hasRole("USER")
 
-                        // 5. All other requests must be authenticated
+                        // 5. All other requests
                         .anyRequest().authenticated()
                 )
-                // Configure session management to be STATELESS (we use JWTs, not sessions)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Add our custom authentication provider
                 .authenticationProvider(authenticationProvider())
-
-                // Add our JWT filter BEFORE the default Spring Security filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // --- EXPLICITLY DISABLE FORMLOGIN ---
                 .formLogin(AbstractHttpConfigurer::disable)
-
-                // --- ADD THIS EXCEPTION HANDLING BLOCK ---
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
-
-                // Configure logout (this is still correct)
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            // Clear the JWT cookie on logout
                             Cookie cookie = new Cookie("jwt-token", null);
                             cookie.setPath("/");
                             cookie.setHttpOnly(true);
-                            cookie.setMaxAge(0); // Expire the cookie
-                            // Redirect to login page
+                            cookie.setMaxAge(0);
                             response.sendRedirect("/login?logout");
                         })
                         .permitAll()
@@ -87,16 +75,13 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        // Tell the provider where to get user details
         authProvider.setUserDetailsService(userDetailsService);
-        // Tell the provider what password encoder to use
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        // Expose the AuthenticationManager as a bean
         return config.getAuthenticationManager();
     }
 }

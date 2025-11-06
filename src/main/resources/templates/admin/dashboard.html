@@ -1,42 +1,76 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/_layout}">
+      layout:decorate="~{fragments/_layout_standard}"> <!-- <-- This is correct -->
 <head>
     <title>Admin Dashboard</title>
 </head>
 <body>
-
 <div layout:fragment="content">
     <h1 class="display-5 mb-4 text-dark">Admin Dashboard</h1>
 
     <!-- Alerts for success/error messages -->
     <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle-fill"></i>
-        <strong th:text="${success}"></strong>
+        <i class="bi bi-check-circle-fill"></i> <strong th:text="${success}"></strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <strong th:text="${error}"></strong>
+        <i class="bi bi-exclamation-triangle-fill"></i> <strong th:text="${error}"></strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div th:if="${info}" class="alert alert-info alert-dismissible fade show" role="alert">
-        <i class="bi bi-info-circle-fill"></i>
-        <strong th:text="${info}"></strong>
+        <i class="bi bi-info-circle-fill"></i> <strong th:text="${info}"></strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="display-4 text-primary me-3"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <div class="text-muted text-uppercase">Total Customers</div>
+                        <div class="h2 fw-bold mb-0" th:text="${totalCustomers}">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="display-4 text-success me-3"><i class="bi bi-journal-text"></i></div>
+                    <div>
+                        <div class="text-muted text-uppercase">Total Accounts</div>
+                        <div class="h2 fw-bold mb-0" th:text="${totalAccounts}">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="display-4 text-info me-3"><i class="bi bi-wallet-fill"></i></div>
+                    <div>
+                        <div class="text-muted text-uppercase">Total Bank Balance</div>
+                        <div class="h2 fw-bold mb-0">₹<span th:text="${#numbers.formatDecimal(totalBalance, 1, 'COMMA', 2, 'POINT')}">0.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forms (Search & Deposit) -->
     <div class="row">
-        <!-- Column 1: Search -->
         <div class="col-lg-6 mb-4">
             <div class="card shadow-lg border-0 rounded-lg h-100">
                 <div class="card-body p-4 p-md-5">
                     <h2 class="text-center fw-bold text-dark mb-4">Search Accounts</h2>
-                    <form th:action="@{/admin/search}" method="GET">
+                    <!-- This form searches by GET request to the current page -->
+                    <form th:action="@{/admin/dashboard}" method="GET">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="query" name="query"
-                                   placeholder="Account Number or Email" required>
+                                   placeholder="Account Number or Email" th:value="${param.query}">
                             <label for="query">Account Number or Email</label>
                         </div>
                         <div class="d-grid mt-4">
@@ -48,12 +82,11 @@
                 </div>
             </div>
         </div>
-
-        <!-- Column 2: Deposit -->
         <div class="col-lg-6 mb-4">
             <div class="card shadow-lg border-0 rounded-lg h-100">
                 <div class="card-body p-4 p-md-5">
                     <h2 class="text-center fw-bold text-dark mb-4">Make a Deposit</h2>
+                    <!-- This form POSTs to the /admin/deposit endpoint -->
                     <form th:action="@{/admin/deposit}" th:object="${depositDto}" method="POST">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="toAccountNumber"
@@ -81,9 +114,10 @@
         </div>
     </div>
 
-    <!-- Search Results Section -->
-    <div th:if="${accounts != null and not accounts.isEmpty()}" class="mt-4">
-        <h2 class="text-dark">Search Results</h2>
+    <!-- All Accounts / Search Results Section -->
+    <div class="mt-4">
+        <!-- The title changes based on whether a search was performed -->
+        <h2 class="text-dark" th:text="${param.query != null ? 'Search Results' : 'All Customer Accounts'}">All Customer Accounts</h2>
         <div class="card shadow-lg border-0 rounded-lg">
             <div class="card-body p-4">
                 <div class="table-responsive">
@@ -94,10 +128,15 @@
                             <th scope="col">Owner Email</th>
                             <th scope="col">Account Number</th>
                             <th scope="col">Account Type</th>
-                            <th scope="col" classs="text-end">Balance (₹)</th>
+                            <th scope="col" class="text-end">Balance (₹)</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <!-- Show message if no accounts are found -->
+                        <tr th:if="${accounts.isEmpty()}">
+                            <td colspan="5" class="text-center text-muted p-4">No accounts found.</td>
+                        </tr>
+                        <!-- Loop over accounts -->
                         <tr th:each="account : ${accounts}">
                             <td th:text="${account.user.name}">John Doe</td>
                             <td th:text="${account.user.email}">john@example.com</td>
@@ -111,7 +150,6 @@
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

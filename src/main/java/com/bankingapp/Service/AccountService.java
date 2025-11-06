@@ -68,8 +68,7 @@ public interface AccountService {
     Account getAccountByAccountNumber(String accountNumber);
 
 
-
-    // ... (other methods)
+    // --- NEW ADMIN METHODS ---
 
     /**
      * Admin: Deposits a specified amount into an account.
@@ -81,5 +80,23 @@ public interface AccountService {
      */
     List<Account> searchAccounts(String query);
 
+    /**
+     * Admin: Retrieves a list of all accounts in the bank.
+     */
+    List<Account> findAllAccounts();
 
+    /**
+     * Admin: Gets the total count of all customers (ROLE_USER).
+     */
+    long getTotalCustomerCount();
+
+    /**
+     * Admin: Gets the total count of all accounts.
+     */
+    long getTotalAccountCount();
+
+    /**
+     * Admin: Gets the sum of all money in all accounts.
+     */
+    BigDecimal getTotalBankBalance();
 }
