@@ -20,7 +20,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String adminEmail = "admin@bank.com";
+        String adminEmail = "mohanrajbalaji17@gmail.com";
 
         // Check if the admin user already exists
         if (!userRepository.existsByEmail(adminEmail)) {
@@ -29,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
             User adminUser = User.builder()
                     .name("Admin Manager")
                     .email(adminEmail)
-                    .password(passwordEncoder.encode("Admin@23#"))
+                    .password(passwordEncoder.encode("Admin@11#"))
                     .roles("ROLE_ADMIN")
                     .build();
 

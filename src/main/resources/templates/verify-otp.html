@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/_layout_split}"> <head>
+    <title>Verify Your Identity</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="text-center fw-bold text-dark mb-4">Check Your Email</h2>
+            <p class="text-center text-muted mb-4">
+                We've sent a 6-digit OTP to <strong th:text="${email}">your.email@example.com</strong>.
+                It expires in 5 minutes.
+            </p>
+
+            <div th:if="${error}" class="alert alert-danger" role="alert"
+                 th:text="${error}">
+            </div>
+
+            <form th:action="@{/verify-otp}" th:object="${otpVerificationDto}" method="post">
+
+                <input type="hidden" th:field="*{email}">
+                <input type="hidden" th:field="*{type}">
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="otp" th:field="*{otp}"
+                           placeholder="123456" required maxlength="6"
+                           style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                    <label for="otp">Enter 6-Digit OTP</label>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class.="btn btn-primary w-100 py-2 fw-bold">
+                        Verify
+                    </button>
+                </div>
+            </form>
+
+            <div class.="text-center mt-3">
+                <small><a th:href="@{/login}">Back to Login</a></small>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
